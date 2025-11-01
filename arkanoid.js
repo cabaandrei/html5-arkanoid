@@ -1,6 +1,7 @@
 // =======================
 // 🎮 Game Setup & Globals
 // =======================
+
 const levelData = loadLevel(levels[0]);
 const canvas = document.getElementById("gameCanvas");
 canvas.width = levelData.canvasWidth;
@@ -12,7 +13,8 @@ const canvasHeight = canvas.height;
 const ballRadius = 10;
 const paddleHeight = 10;
 
-let bricks = [];
+// let bricks = [];
+let bricks = levelData.bricks;
 let x = canvasWidth / 2;
 let y = canvasHeight - 50;
 let dx = 2;

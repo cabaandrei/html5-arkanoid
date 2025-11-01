@@ -14,15 +14,37 @@ class Brick {
   }
 }
 
+// const levels = [
+//   {
+//     name: "Level 1",
+//     rows: 3,
+//     columns: 5,
+//     layout: [
+//       ["normal", "normal", "normal", "normal", "normal"],
+//       ["normal", "strong", "strong", "strong", "normal"],
+//       ["normal", "normal", "indestructible", "normal", "normal"],
+//     ],
+//   },
+// ];
+
 const levels = [
   {
     name: "Level 1",
-    rows: 3,
-    columns: 5,
+    rows: 12,
+    columns: 7,
     layout: [
-      ["normal", "normal", "normal", "normal", "normal"],
-      ["normal", "strong", "strong", "strong", "normal"],
-      ["normal", "normal", "indestructible", "normal", "normal"],
+      ["normal", "normal", "normal", "normal", "normal", "normal", "normal"],
+      ["normal", "strong", "strong", "strong", "strong", "strong", "normal"],
+      ["normal", "normal", "indestructible", "indestructible", "indestructible", "normal", "normal"],
+      ["normal", "normal", "normal", "normal", "normal", "normal", "normal"],
+      ["normal", "strong", "strong", "strong", "strong", "strong", "normal"],
+      ["normal", "normal", "indestructible", "indestructible", "indestructible", "normal", "normal"],
+      ["normal", "normal", "normal", "normal", "normal", "normal", "normal"],
+      ["normal", "strong", "strong", "strong", "strong", "strong", "normal"],
+      ["normal", "normal", "indestructible", "indestructible", "indestructible", "normal", "normal"],
+      ["normal", "normal", "normal", "normal", "normal", "normal", "normal"],
+      ["normal", "strong", "strong", "strong", "strong", "strong", "normal"],
+      ["normal", "normal", "indestructible", "indestructible", "indestructible", "normal", "normal"]
     ],
   },
 ];
