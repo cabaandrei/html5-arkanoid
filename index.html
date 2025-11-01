@@ -1,41 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>JS Arkanoid Block Breaker</title>
-    <style>
-        /* Minimal CSS to center the game */
-        body {
-            background: #eee;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: sans-serif;
-            flex-direction: column;
-        }
-
-        #gameCanvas {
-            border: 5px solid #333;
-            background: #000;
-            /* Black background for the game area */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-
-        h1 {
-            color: #333;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <title>Classic Arkanoid</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-    <h1>Classic JS Arkanoid</h1>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-
+    <canvas id="gameCanvas"></canvas>
     <script src="arkanoid-config.js"></script>
     <script src="arkanoid.js"></script>
-
 </body>
 
 </html>

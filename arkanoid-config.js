@@ -1,4 +1,3 @@
-// --- Brick Class ---
 class Brick {
   constructor(x, y, type = "normal") {
     this.x = x;
@@ -15,7 +14,6 @@ class Brick {
   }
 }
 
-// --- Level Definitions ---
 const levels = [
   {
     name: "Level 1",
@@ -29,7 +27,6 @@ const levels = [
   },
 ];
 
-// --- Level Loader ---
 function loadLevel(levelConfig) {
   const brickWidth = 75;
   const brickHeight = 20;

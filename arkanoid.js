@@ -1,16 +1,14 @@
-// --- Load Level and Canvas ---
 const levelData = loadLevel(levels[0]);
 const bricks = levelData.bricks;
 
 const canvas = document.getElementById("gameCanvas");
 canvas.width = levelData.canvasWidth;
 canvas.height = levelData.canvasHeight;
-
 const ctx = canvas.getContext("2d");
+
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
-// --- Fixed Sizes ---
 const ballRadius = 10;
 let x = canvasWidth / 2;
 let y = canvasHeight - 50;
@@ -21,32 +19,22 @@ const paddleHeight = 10;
 const paddleWidth = 75;
 let paddleX = (canvasWidth - paddleWidth) / 2;
 
-let rightPressed = false;
-let leftPressed = false;
 let lastBrickHit = null;
+let score = 0;
+let highScore = parseInt(localStorage.getItem("arkanoidHighScore")) || 0;
+let gameState = "menu";
 
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-document.addEventListener("mousemove", mouseMoveHandler, false);
-
-function keyDownHandler(e) {
-  if (e.key === "Right" || e.key === "ArrowRight") rightPressed = true;
-  else if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = true;
-}
-
-function keyUpHandler(e) {
-  if (e.key === "Right" || e.key === "ArrowRight") rightPressed = false;
-  else if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = false;
-}
+// canvas.addEventListener("mousemove", mouseMoveHandler);
+document.addEventListener("mousemove", mouseMoveHandler);
 
 function mouseMoveHandler(e) {
-  let relativeX = e.clientX - canvas.offsetLeft;
+  const rect = canvas.getBoundingClientRect();
+  const relativeX = e.clientX - rect.left;
   if (relativeX > 0 && relativeX < canvasWidth) {
     paddleX = relativeX - paddleWidth / 2;
-    if (paddleX < 0) paddleX = 0;
-    if (paddleX + paddleWidth > canvasWidth)
-      paddleX = canvasWidth - paddleWidth;
+    paddleX = Math.max(0, Math.min(paddleX, canvasWidth - paddleWidth));
   }
+  console.log("Mouse moved:", e.clientX);
 }
 
 function drawBall() {
@@ -85,6 +73,45 @@ function drawBricks() {
   }
 }
 
+function drawHUD() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.textAlign = "left";
+  const padding = 24; // gives breathing room from the edge
+  ctx.fillText("Score: " + score, padding, 24);
+  ctx.fillText("High Score: " + highScore, canvasWidth - 150, 24);
+  ctx.textAlign = "center";
+  ctx.fillText("Level: " + levels[0].name, canvasWidth / 2, 24);
+}
+
+function drawMenu() {
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.font = "28px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.textAlign = "center";
+  ctx.fillText("Classic Arkanoid", canvasWidth / 2, canvasHeight / 2 - 40);
+  ctx.font = "18px Arial";
+  ctx.fillText("Click to Start", canvasWidth / 2, canvasHeight / 2);
+  canvas.addEventListener("click", startGame, { once: true });
+}
+
+function drawGameOver() {
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.font = "28px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.textAlign = "center";
+  ctx.fillText("Game Over", canvasWidth / 2, canvasHeight / 2 - 40);
+  ctx.font = "18px Arial";
+  ctx.fillText("Score: " + score, canvasWidth / 2, canvasHeight / 2);
+  ctx.fillText(
+    "High Score: " + highScore,
+    canvasWidth / 2,
+    canvasHeight / 2 + 30
+  );
+  ctx.fillText("Click to Play Again", canvasWidth / 2, canvasHeight / 2 + 60);
+  canvas.addEventListener("click", startGame, { once: true });
+}
+
 function collisionDetection() {
   for (let r = 0; r < bricks.length; r++) {
     for (let c = 0; c < bricks[r].length; c++) {
@@ -113,13 +140,13 @@ function collisionDetection() {
 
           b.hit();
           lastBrickHit = b;
+          score += b.type === "strong" ? 20 : 10;
           return;
         }
       }
     }
   }
 
-  // Reset lastBrickHit if ball is far away
   if (
     lastBrickHit &&
     (x < lastBrickHit.x - 100 ||
@@ -132,10 +159,13 @@ function collisionDetection() {
 }
 
 function draw() {
+  if (gameState !== "playing") return;
+
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   drawBricks();
   drawBall();
   drawPaddle();
+  drawHUD();
   collisionDetection();
 
   let nextX = x + dx;
@@ -155,13 +185,9 @@ function draw() {
     dx = normalized * 4;
     dy = -Math.abs(dy);
   } else if (nextY + ballRadius > canvasHeight) {
-    alert("GAME OVER! Try again!");
-    document.location.reload();
+    gameOver();
     return;
   }
-
-  if (rightPressed && paddleX < canvasWidth - paddleWidth) paddleX += 7;
-  else if (leftPressed && paddleX > 0) paddleX -= 7;
 
   x += dx;
   y += dy;
@@ -169,4 +195,24 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
-draw();
+function startGame() {
+  score = 0;
+  x = canvasWidth / 2;
+  y = canvasHeight - 50;
+  dx = 2;
+  dy = -2;
+  gameState = "playing";
+  draw();
+}
+
+function gameOver() {
+  gameState = "gameover";
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("arkanoidHighScore", highScore);
+  }
+  drawGameOver();
+}
+
+// Start with menu
+drawMenu();
